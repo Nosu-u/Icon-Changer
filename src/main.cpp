@@ -1,4 +1,5 @@
-#include "dumb.hpp"
+#include <Geode/Geode.hpp>
+#include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/BoomScrollLayer.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
