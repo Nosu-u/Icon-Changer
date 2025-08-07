@@ -1,0 +1,27 @@
+{
+	"geode": "4.7.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "nosu.icon_changer",
+	"name": "Icon Changer",
+	"version": "v1.0.0",
+	"developer": "Nosu",
+	"description": "Allows you to change your icon mid level",
+	"links": {
+        "source": "https://github.com/Nosu-u/Icon-Changer"
+    },
+	"resources": {
+		"sprites": [
+			"resources/garage.png"
+		]
+	},
+	"tags": [
+        "gameplay",
+        "customization",
+        "offline"
+    ]
+}
