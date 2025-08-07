@@ -5,6 +5,9 @@
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
 #include <Geode/modify/LevelSelectLayer.hpp>
+#if defined(GEODE_IS_WINDOWS) || defined(GEODE_IS_IOS)
+#include <Geode/modify/PlayLayer.hpp>
+#endif
 
 using namespace geode::prelude;
 
@@ -133,6 +136,32 @@ class $modify(PauseLayer) {
         returnFix();
 	}
 };
+
+#if defined(GEODE_IS_WINDOWS) || defined(GEODE_IS_IOS)
+    class $modify(PlayLayer) {
+        void pauseGame(bool p0) {
+            PlayLayer::pauseGame(p0);
+
+            auto ret = PauseLayer::create(p0);
+
+		    bug = true;
+        
+            auto menu = ret->getChildByID("right-button-menu");
+            auto str = CCSprite::create("garage.png"_spr);
+            auto btn = CCMenuItemSpriteExtra::create(
+                str,
+                ret,
+                menu_selector(LevelInfoLayer::onGarage)
+            );
+        
+            btn->setPosition({20.0f, 226.875f});
+            btn->m_baseScale = 0.8f;
+            btn->setScale(0.8f);
+		    btn->setID("nosu.icon-changer/icon-changer-button"_spr);
+            menu->addChild(btn);
+        }
+    };
+#endif
 
 class $modify(BoomScrollLayer) {
 	void updateDots(float p0) {
