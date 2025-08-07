@@ -1,4 +1,5 @@
-#include "dumb.hpp"
+#include <Geode/Geode.hpp>
+#include <Geode/modify/PauseLayer.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/BoomScrollLayer.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
@@ -106,7 +107,7 @@ void returnFix() { // without all of this it always goes to MenuLayer so yeah
 }
 
 #if defined(GEODE_ANDROID) || defined(GEODE_MACOS)
-class $modify(PauseLayer) {
+class $modify(ModPauseLayer, PauseLayer) {
 	static PauseLayer* create(bool p0) {
         auto ret = PauseLayer::create(p0);
 
@@ -130,34 +131,34 @@ class $modify(PauseLayer) {
     }
 
 	#elif
-	    static void onModify(auto& self) {
-            Result<> plCustomSetup = self.setHookPriority("PauseLayer::customSetup", INT_MIN);
-        }
+	static void onModify(auto& self) {
+        Result<> plCustomSetup = self.setHookPriority("PauseLayer::customSetup", INT_MIN);
+    }
 
-	    void customSetup() {
-		    PauseLayer::customSetup();
+	void customSetup() {
+		PauseLayer::customSetup();
 
-            bug = true;
+        bug = true;
         
-            auto menu = this->getChildByID("right-button-menu");
-            auto str = CCSprite::create("garage.png"_spr);
-            auto btn = CCMenuItemSpriteExtra::create(
-                str,
-                this,
-                menu_selector(LevelInfoLayer::onGarage)
-            );
+        auto menu = this->getChildByID("right-button-menu");
+        auto str = CCSprite::create("garage.png"_spr);
+        auto btn = CCMenuItemSpriteExtra::create(
+            str,
+            this,
+            menu_selector(LevelInfoLayer::onGarage)
+        );
         
-            btn->setPosition({20.0f, 226.875f});
-            btn->m_baseScale = 0.8f;
-            btn->setScale(0.8f);
-		    btn->setID("nosu.icon-changer/icon-changer-button"_spr);
-            menu->addChild(btn);
-        }
+        btn->setPosition({20.0f, 226.875f});
+        btn->m_baseScale = 0.8f;
+        btn->setScale(0.8f);
+		btn->setID("nosu.icon-changer/icon-changer-button"_spr);
+        menu->addChild(btn);
+    }
 
-        void onResume(CCObject* sender) {
-		    CCDirector::get()->getRunningScene()->removeChildByID("nosu.icon-changer/icon-changer-button"_spr);
-		    PauseLayer::onResume(sender);
-	    }
+    void onResume(CCObject* sender) {
+		CCDirector::get()->getRunningScene()->removeChildByID("nosu.icon-changer/icon-changer-button"_spr);
+		PauseLayer::onResume(sender);
+	}
     #endif
 
 	void onQuit(CCObject* sender) {
