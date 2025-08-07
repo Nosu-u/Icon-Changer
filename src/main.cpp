@@ -1,5 +1,9 @@
+#if defined(GEODE_ANDROID) || defined(GEODE_MACOS) 
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PauseLayer.hpp>
+#elif
+#include "dumb.hpp"
+#endif
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/BoomScrollLayer.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
@@ -130,7 +134,7 @@ class $modify(PauseLayer) {
         return ret;
     }
 
-	#elif defined(GEODE_WINDOWS) || defined(GEODE_IOS)
+	#elif
 	    static void onModify(auto& self) {
             Result<> plCustomSetup = self.setHookPriority("PauseLayer::customSetup", INT_MIN);
         }
