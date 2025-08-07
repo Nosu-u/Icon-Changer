@@ -5,9 +5,6 @@
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
 #include <Geode/modify/LevelSelectLayer.hpp>
-#if defined(GEODE_IS_WINDOWS) || defined(GEODE_IS_IOS)
-#include <Geode/modify/PlayLayer.hpp>
-#endif
 
 using namespace geode::prelude;
 
@@ -109,6 +106,7 @@ void returnFix() { // without all of this it always goes to MenuLayer so yeah
 	}
 }
 
+#if defined(GEODE_ANDROID) || defined(GEODE_MACOS)
 class $modify(PauseLayer) {
 	static PauseLayer* create(bool p0) {
         auto ret = PauseLayer::create(p0);
@@ -132,25 +130,21 @@ class $modify(PauseLayer) {
         return ret;
     }
 
-	void onQuit(CCObject* sender) {
-        returnFix();
-	}
-};
+	#elif defined(GEODE_WINDOWS) || defined(GEODE_IOS)
+	    static void onModify(auto& self) {
+            Result<> plCustomSetup = self.setHookPriority("PauseLayer::customSetup", INT_MIN);
+        }
 
-#if defined(GEODE_IS_WINDOWS) || defined(GEODE_IS_IOS)
-    class $modify(PlayLayer) {
-        void pauseGame(bool p0) {
-            PlayLayer::pauseGame(p0);
+	    void customSetup() {
+		    PauseLayer::customSetup();
 
-            auto ret = PauseLayer::create(p0);
-
-		    bug = true;
+            bug = true;
         
-            auto menu = ret->getChildByID("right-button-menu");
+            auto menu = this->getChildByID("right-button-menu");
             auto str = CCSprite::create("garage.png"_spr);
             auto btn = CCMenuItemSpriteExtra::create(
                 str,
-                ret,
+                this,
                 menu_selector(LevelInfoLayer::onGarage)
             );
         
@@ -160,8 +154,17 @@ class $modify(PauseLayer) {
 		    btn->setID("nosu.icon-changer/icon-changer-button"_spr);
             menu->addChild(btn);
         }
-    };
-#endif
+
+        void onResume(CCObject* sender) {
+		    CCDirector::get()->getRunningScene()->removeChildByID("nosu.icon-changer/icon-changer-button"_spr);
+		    PauseLayer::onResume(sender);
+	    }
+    #endif
+
+	void onQuit(CCObject* sender) {
+        returnFix();
+	}
+};
 
 class $modify(BoomScrollLayer) {
 	void updateDots(float p0) {
