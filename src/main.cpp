@@ -1,9 +1,4 @@
-#if defined(GEODE_ANDROID) || defined(GEODE_MACOS) 
-#include <Geode/Geode.hpp>
-#include <Geode/modify/PauseLayer.hpp>
-#elif
 #include "dumb.hpp"
-#endif
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/BoomScrollLayer.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
